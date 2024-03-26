@@ -22,6 +22,10 @@ class TOONTANKS_API ATank : public ABasePawn
 	protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	public:	
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
 	
 	private:
 		UPROPERTY(VisibleAnywhere, Category = "Components")
@@ -33,8 +37,10 @@ class TOONTANKS_API ATank : public ABasePawn
 		UPROPERTY(EditAnywhere, Category = "Movement")
 		float TurnRate = .5f;
 
+		APlayerController* PlayerControllerRef;
 
-	//Enhanced Input 
+
+	//Enhanced Input relevant data
 	protected:
 		UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Enhanced Input")
 		class UInputMappingContext* InputMapping;

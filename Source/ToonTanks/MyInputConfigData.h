@@ -22,4 +22,7 @@ class TOONTANKS_API UMyInputConfigData : public UDataAsset
 	
 		UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 		UInputAction* InputLook;
+
+		UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+		UInputAction* InputFire;
 };

@@ -30,7 +30,15 @@ ATank::ATank()
 void ATank::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	PlayerControllerRef = Cast<APlayerController>(GetController());
+}
+
+
+// Called every frame
+void ATank::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
 }
 
 
@@ -50,6 +58,7 @@ void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	// Bind the actions
 	PEI->BindAction(InputActions->InputMove, ETriggerEvent::Triggered, this, &ATank::Move);
 	PEI->BindAction(InputActions->InputLook, ETriggerEvent::Triggered, this, &ATank::Look);
+	PEI->BindAction(InputActions->InputFire, ETriggerEvent::Triggered, this, &ATank::Fire);
 }
 
 void ATank::Move(const FInputActionValue& Value)
@@ -57,7 +66,6 @@ void ATank::Move(const FInputActionValue& Value)
     if (Controller != nullptr)
     {
         const FVector2D MoveValue = Value.Get<FVector2D>();
-		UE_LOG(LogTemp, Display, TEXT("Value: %f"), MoveValue.Y);
         const FRotator MovementRotation(0, Controller->GetControlRotation().Yaw, 0);
  
         // Forward/Backward direction
@@ -68,15 +76,10 @@ void ATank::Move(const FInputActionValue& Value)
  
             AddMovementInput(Direction, MoveValue.Y);
         }
- 
 
-        // Right/Left direction
+        // Right/Left turning
         if (MoveValue.X != 0.f)
         {
-            // Get right vector
-            //const FVector Direction = MovementRotation.RotateVector(FVector::RightVector);
- 
-            //AddMovementInput(Direction, MoveValue.X);
 			AddControllerYawInput(MoveValue.X * TurnRate);
         }
     }
@@ -84,18 +87,10 @@ void ATank::Move(const FInputActionValue& Value)
  
 void ATank::Look(const FInputActionValue& Value)
 {
-    // if (Controller != nullptr)
-    // {
-    //     const FVector2D LookValue = Value.Get<FVector2D>();
- 
-    //     if (LookValue.X != 0.f)
-    //     {
-    //         AddControllerYawInput(LookValue.X);
-    //     }
- 
-    //     if (LookValue.Y != 0.f)
-    //     {
-    //         AddControllerPitchInput(LookValue.Y);
-    //     }
-    // }
+	if(Controller != nullptr)
+	{
+		FHitResult HitResult;
+		PlayerControllerRef->GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, false, HitResult);
+		RotateTurret(HitResult.ImpactPoint);
+	}
 }
