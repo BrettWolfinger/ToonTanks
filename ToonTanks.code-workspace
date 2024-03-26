@@ -402,10 +402,7 @@
 			},
 			{
 				"label": "ToonTanksEditor Win64 Development Build",
-				"group": {
-					"kind": "build",
-					"isDefault": true
-				},
+				"group": "build",
 				"command": "Engine\\Build\\BatchFiles\\Build.bat",
 				"args": [
 					"ToonTanksEditor",

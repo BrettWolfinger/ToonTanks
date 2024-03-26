@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "BasePawn.h"
+#include "InputActionValue.h"
 #include "Tank.generated.h"
 
 /**
@@ -17,6 +18,10 @@ class TOONTANKS_API ATank : public ABasePawn
 	public:
 	// TankConstructor
 	ATank();
+
+	protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
 	
 	private:
 		UPROPERTY(VisibleAnywhere, Category = "Components")
@@ -25,7 +30,23 @@ class TOONTANKS_API ATank : public ABasePawn
 		UPROPERTY(VisibleAnywhere, Category = "Components")
 		class UCameraComponent* Camera;
 
-		void Move(float value);
+		UPROPERTY(EditAnywhere, Category = "Movement")
+		float TurnRate = .5f;
+
+
+	//Enhanced Input 
+	protected:
+		UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Enhanced Input")
+		class UInputMappingContext* InputMapping;
+		
+		UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Enhanced Input")
+		class UMyInputConfigData* InputActions;
+
+		// Handle move input
+		void Move(const FInputActionValue& Value);
+		
+		// Handle look input
+		void Look(const FInputActionValue& Value);
 
 	public:
 		// Called to bind functionality to input
